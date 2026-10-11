@@ -1,0 +1,2 @@
+{"name":"Outback Orchard","short_name":"Outback Orchard","description":"A North Queensland farm match-3: match fruit, earn stars, rebuild the farm.","start_url":"./","scope":"./","display":"standalone","orientation":"portrait","background_color":"#3a2412","theme_color":"#4a2c14",
+"icons":[{"src":"icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},{"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}]}

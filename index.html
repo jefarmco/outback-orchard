@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#4a2c14">
+<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
+<title>Outback Orchard</title>
+<link rel="icon" href="icon-192.png"><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preload" href="assets/atlas.webp" as="image">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+html,body{margin:0;height:100%;overflow:hidden;background:#3a2412;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif;color:#fff8e6;touch-action:none;overscroll-behavior:none}
+#cv{position:fixed;inset:0;width:100%;height:100%;display:block}
+.layer{position:fixed;inset:0;pointer-events:none}
+.layer>*{pointer-events:auto}
+.wood{background:linear-gradient(rgba(40,20,5,.2),rgba(30,15,3,.5)),url(assets/wood.webp) repeat,#5a3a1e;background-size:auto,256px 128px}
+.board{background:linear-gradient(rgba(255,246,222,.74),rgba(250,232,195,.82)),url(assets/board.webp) repeat,#e8cfa0;background-size:auto,256px;color:#3b2410}
+.btn{border:0;border-radius:14px;font-weight:800;font-size:18px;line-height:1.15;font-family:inherit;color:#fff;padding:12px 18px;min-height:48px;cursor:pointer;background:linear-gradient(#66bb6a,#2e7d32);box-shadow:0 4px 0 #1b4d1f,0 6px 12px rgba(0,0,0,.35);text-shadow:0 1px 2px rgba(0,0,0,.5);transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #1b4d1f}
+.btn.gold{background:linear-gradient(#ffe082,#f9a825);color:#4a2c00;text-shadow:0 1px 0 rgba(255,255,255,.6);box-shadow:0 4px 0 #a86a00,0 6px 12px rgba(0,0,0,.35)}
+.btn.red{background:linear-gradient(#ef7a5a,#c0392b);box-shadow:0 4px 0 #7b1d14,0 6px 12px rgba(0,0,0,.35)}
+.btn.grey{background:linear-gradient(#a1887f,#6d4c41);box-shadow:0 4px 0 #3e2723,0 6px 12px rgba(0,0,0,.35)}
+.btn[disabled]{filter:grayscale(.8) brightness(.85);opacity:.7}
+.chip{display:inline-flex;align-items:center;gap:5px;background:rgba(25,12,3,.6);border-radius:20px;padding:4px 12px 4px 6px;font-weight:800;font-size:17px;box-shadow:inset 0 1px 3px rgba(0,0,0,.6),0 1px 0 rgba(255,220,170,.2)}
+.icw{display:inline-flex;align-items:center;justify-content:center;flex:none;vertical-align:middle}.ico{display:inline-block;background-image:url(assets/atlas.webp);background-repeat:no-repeat;flex:none}
+.round{width:46px;height:46px;border-radius:50%;border:2px solid #2b1a0c;background:linear-gradient(#8d6e63,#5d4037);color:#fff;font-size:22px;box-shadow:0 3px 0 #2b1a0c;display:flex;align-items:center;justify-content:center;cursor:pointer}
+/* top hud (level) */
+#hud{position:fixed;left:0;right:0;top:0;padding:8px 8px 8px;padding-top:calc(8px + env(safe-area-inset-top));display:none;gap:8px;align-items:stretch;border-bottom:3px solid #2b1a0c;box-shadow:0 4px 10px rgba(0,0,0,.45)}
+#moves{flex:none;width:74px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(25,12,3,.55);box-shadow:inset 0 2px 5px rgba(0,0,0,.6)}
+#moves b{font-size:32px;line-height:1;text-shadow:0 2px 0 #000}#moves small{font-size:11px;letter-spacing:.08em;opacity:.85}
+#moves.low b{color:#ff8a65;animation:pulse 1s infinite}
+@keyframes pulse{50%{transform:scale(1.15)}}
+#goals{flex:1;display:flex;gap:6px;justify-content:center;align-items:center;border-radius:14px;background:rgba(25,12,3,.45);box-shadow:inset 0 2px 5px rgba(0,0,0,.55);padding:4px}
+.goal{position:relative;display:flex;flex-direction:column;align-items:center;min-width:52px}
+.goal .n{font-weight:900;font-size:17px;text-shadow:0 2px 0 #000;margin-top:-4px}
+.goal.done .n{color:#a5f08a}
+.goal.bump{animation:bump .25s}
+@keyframes bump{50%{transform:scale(1.25)}}
+#lvlinfo{flex:none;width:74px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:12px;font-weight:800}
+#lvlinfo .round{width:40px;height:40px;font-size:18px}
+#score{font-size:12px;opacity:.9}
+/* booster bar */
+#bbar{position:fixed;left:0;right:0;bottom:0;display:none;justify-content:center;gap:12px;padding:8px;padding-bottom:calc(10px + env(safe-area-inset-bottom));border-top:3px solid #2b1a0c;box-shadow:0 -4px 10px rgba(0,0,0,.45)}
+.boost{position:relative;width:64px;height:64px;border-radius:16px;border:2px solid #2b1a0c;background:linear-gradient(rgba(255,230,180,.15),rgba(0,0,0,.25)),rgba(40,22,8,.55);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,220,170,.25),0 3px 0 rgba(0,0,0,.4)}
+.boost .c{position:absolute;right:-6px;bottom:-6px;background:#c0392b;color:#fff;border:2px solid #fff3d6;border-radius:12px;min-width:24px;height:24px;font-size:13px;font-weight:900;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.boost.zero{filter:grayscale(.9);opacity:.6}.boost.on{border-color:#ffd54f;box-shadow:0 0 0 3px #ffd54f,0 0 18px #ffd54f}
+.boost label{position:absolute;bottom:-1px;left:0;right:0;text-align:center;font-size:10px;font-weight:800;text-shadow:0 1px 2px #000}
+#boostTip{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom));padding:8px 14px;border-radius:12px;font-weight:800;display:none;box-shadow:0 4px 10px rgba(0,0,0,.4);white-space:nowrap}
+/* farm hud */
+#fhud{position:fixed;left:0;right:0;top:0;display:none;justify-content:space-between;align-items:center;padding:10px;padding-top:calc(10px + env(safe-area-inset-top))}
+#fbot{position:fixed;left:0;right:0;bottom:0;display:none;flex-direction:column;align-items:center;gap:10px;padding:12px;padding-bottom:calc(16px + env(safe-area-inset-bottom));background:linear-gradient(rgba(40,20,5,0),rgba(40,20,5,.75) 40%)}
+#fbot .row{display:flex;gap:10px;width:100%;max-width:400px}
+#fbot .row .btn{flex:1}
+#bPlay{width:100%;max-width:400px;font-size:24px;padding:16px}
+.badge{display:inline-block;background:#c0392b;color:#fff;border-radius:10px;font-size:12px;padding:1px 7px;margin-left:4px;vertical-align:middle}
+.task-arrow{position:fixed;pointer-events:none;font-size:30px;animation:bob 1s infinite;text-shadow:0 2px 3px #000;display:none}
+@keyframes bob{50%{transform:translateY(-8px)}}
+/* modal */
+#modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:radial-gradient(rgba(40,20,5,.5),rgba(20,10,2,.82));padding:14px;z-index:10}
+.card{width:100%;max-width:390px;max-height:calc(100% - 20px);overflow:auto;border-radius:18px;padding:18px 16px;text-align:center;border:4px solid #5a3a1e;box-shadow:0 12px 34px rgba(0,0,0,.6),inset 0 0 0 2px rgba(255,240,210,.6),inset 0 0 24px rgba(90,50,15,.35);animation:pop .25s ease-out}
+@keyframes pop{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+.card h2{margin:0 0 6px;font-size:26px;color:#5a2a0c;text-shadow:0 2px 0 rgba(255,230,180,.8)}
+.card p{margin:6px 0;font-size:15px;line-height:1.35}
+.card .btn{width:100%;margin-top:10px}
+.glist{display:flex;justify-content:center;gap:12px;margin:10px 0}
+.glist .goal .n{color:#3b2410;text-shadow:none}
+.stars{display:flex;justify-content:center;gap:4px;margin:8px 0}
+.stars .icw{transition:transform .3s,filter .3s}
+.stars .off{filter:grayscale(1) brightness(.6);opacity:.5}
+.stars .pop{animation:starpop .45s}
+@keyframes starpop{0%{transform:scale(0) rotate(-90deg)}70%{transform:scale(1.35)}100%{transform:scale(1)}}
+.prebo{display:flex;justify-content:center;gap:10px;margin:8px 0}
+.prebo .boost{background:rgba(90,50,20,.25);border-color:#8a6236}
+.small{font-size:12.5px;opacity:.85}
+.tasks{display:flex;flex-direction:column;gap:8px;text-align:left;margin:8px 0}
+.task{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;background:rgba(255,246,222,.75);border:2px solid #8a6236}
+.task .tn{flex:1;font-weight:800;font-size:15px}
+.task .btn{width:auto;margin:0;padding:8px 12px;min-height:40px;font-size:15px}
+.task.done{opacity:.6}.task.locked{opacity:.45}
+.lvgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:10px 0}
+.lv{border:2px solid #8a6236;border-radius:12px;background:rgba(255,246,222,.8);padding:6px 0;font-weight:900;font-size:18px;color:#3b2410;cursor:pointer}
+.lv small{display:block;font-size:10px;color:#e6a100;letter-spacing:-1px}
+.lv.lock{opacity:.4}.lv.cur{background:#ffe082;border-color:#e65100}
+.tog{display:flex;justify-content:space-between;align-items:center;padding:10px 4px;border-bottom:1px solid rgba(90,50,20,.25);font-weight:800;font-size:16px}
+.sw{width:58px;height:32px;border-radius:16px;background:#a1887f;position:relative;border:0;cursor:pointer}
+.sw::after{content:'';position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#fff;transition:left .15s;box-shadow:0 1px 3px rgba(0,0,0,.4)}
+.sw.on{background:#43a047}.sw.on::after{left:29px}
+/* dialogue */
+#dlg{position:fixed;left:0;right:0;bottom:0;display:none;z-index:12;padding:10px;padding-bottom:calc(14px + env(safe-area-inset-bottom));align-items:flex-end;gap:6px;background:linear-gradient(rgba(20,10,2,0),rgba(20,10,2,.65) 35%)}
+#dlg .por{width:116px;height:124px;flex:none;filter:drop-shadow(0 4px 6px rgba(0,0,0,.5))}
+#dlg .bub{flex:1;border-radius:16px;padding:12px 14px;border:3px solid #5a3a1e;font-size:16px;line-height:1.35;position:relative;margin-bottom:18px;min-height:84px;box-shadow:0 6px 16px rgba(0,0,0,.5)}
+#dlg .bub b{display:block;color:#8a3a10;font-size:14px;margin-bottom:2px}
+#dlg .bub .tap{position:absolute;right:10px;bottom:4px;font-size:11px;opacity:.6}
+#dlg.right{flex-direction:row-reverse}
+/* banner + loading */
+#banner{position:fixed;left:0;right:0;top:38%;text-align:center;font-weight:900;font-size:40px;color:#fff3b0;text-shadow:0 3px 0 #7a3a00,0 0 18px rgba(0,0,0,.6);pointer-events:none;display:none;letter-spacing:.02em}
+#banner.show{display:block;animation:ban 1.5s ease-out forwards}
+@keyframes ban{0%{transform:scale(.3);opacity:0}15%{transform:scale(1.15);opacity:1}25%{transform:scale(1)}80%{opacity:1}100%{opacity:0;transform:translateY(-30px)}}
+#load{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:radial-gradient(#7a4a22,#2b1608);z-index:20}
+#load .lbar{width:70%;max-width:300px;height:18px;border-radius:9px;background:rgba(0,0,0,.35);border:2px solid #f9c86a;overflow:hidden}
+#load .lbar i{display:block;height:100%;width:0;background:linear-gradient(#ffe082,#ef8a1e);transition:width .2s}
+#logo{width:min(92vw,420px);filter:drop-shadow(0 8px 12px rgba(0,0,0,.5))}
+#title{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:space-between;padding:calc(30px + env(safe-area-inset-top)) 20px calc(34px + env(safe-area-inset-bottom));z-index:5;background:linear-gradient(rgba(30,15,5,.0),rgba(30,15,5,.0) 55%,rgba(30,15,5,.7))}
+#title .btn{width:100%;max-width:360px;font-size:24px;padding:16px}
+#title .by{font-size:12px;opacity:.8;margin-top:8px;text-shadow:0 1px 2px #000}
+</style>
+</head><body>
+<canvas id="cv"></canvas>
+<div id="load"><img id="logo0" src="assets/logo.webp" alt="" style="width:min(86vw,380px)"><div class="lbar"><i id="lbi"></i></div><div id="lbt" style="font-weight:800">Loading the farm…</div></div>
+<div id="title"><img id="logo" src="assets/logo.webp" alt="Outback Orchard"><div style="width:100%;display:flex;flex-direction:column;align-items:center"><button class="btn gold" id="bStart">▶ Play</button><div class="by">A North Queensland farm match-3 · no ads, no purchases</div></div></div>
+<div id="hud" class="wood"><div id="moves"><small>MOVES</small><b id="mv">20</b></div><div id="goals"></div><div id="lvlinfo"><button class="round" id="bPause" aria-label="Pause">❚❚</button><span id="lvlname">Level 1</span><span id="score">0</span></div></div>
+<div id="bbar" class="wood"></div>
+<div id="boostTip" class="board"></div>
+<div id="fhud"><span class="chip" id="starChip"></span><span style="display:flex;gap:8px"><button class="round" id="bLevels" aria-label="Levels">☰</button><button class="round" id="bSet" aria-label="Settings">⚙</button></span></div>
+<div id="fbot"><button class="btn gold" id="bPlay">Play Level 1</button><div class="row"><button class="btn" id="bTasks">🔨 Farm jobs</button></div></div>
+<div class="task-arrow" id="tArrow">👇</div>
+<div id="banner"></div>
+<div id="dlg"><canvas class="por" id="por" width="232" height="248"></canvas><div class="bub board" id="bub"></div></div>
+<div id="modal"></div>
+<script src="js/frames.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/levels.js"></script>
+<script src="js/data.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/game.js"></script>
+</body></html>

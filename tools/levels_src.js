@@ -1,0 +1,36 @@
+// Level designs. moves + star targets are filled in by tune.js (greedy bot), output -> js/levels.js
+// '.' tile  '#' void  m/M mud(1/2)  c/C crate(1/2 hp)  w wire  W wire+mud  x crate+mud  a calf
+// colours: 0 mango 1 lychee 2 gum leaf 3 wattle 4 egg 5 passionfruit
+const F8=n=>Array(n).fill('........');
+module.exports=[
+{name:'First Pick',colors:[0,1,2,3],goals:[{t:'collect',k:0,n:20}],minMoves:15,layout:Array(7).fill('#.......').map(r=>r.slice(1)),target:.99},
+{name:'Lychee Season',colors:[0,1,2,4],goals:[{t:'collect',k:1,n:22},{t:'collect',k:4,n:22}],minMoves:15,layout:Array(8).fill('.......'),target:.97},
+{name:'Muddy Boots',colors:[0,1,3,4],goals:[{t:'mud'}],minMoves:15,layout:['........','........','.mmmmmm.','.m....m.','.m....m.','.mmmmmm.','........','........'],target:.96},
+{name:'Wattle Walk',colors:[0,2,3,4],goals:[{t:'collect',k:0,n:32},{t:'collect',k:3,n:32}],minMoves:15,layout:['#......#','........','........','........','........','........','........','........','#......#'],target:.94},
+{name:'Crate Expectations',colors:[0,1,2,3],goals:[{t:'crate'}],minMoves:15,layout:['........','........','........','.cc..cc.','.cC..Cc.','.cc..cc.','........','........','........'],target:.92},
+{name:'Calf Muster',colors:[1,2,3,4],goals:[{t:'calf'}],calf:{total:2,max:2,p:0},layout:['..a..a..','........','........','........','........','........','........','........'],target:.92},
+{name:'Wet Season',colors:[0,1,2,3,5],goals:[{t:'mud'},{t:'collect',k:5,n:18}],layout:['........','........','.m....m.','.mm..mm.','..mmmm..','..mmmm..','.mm..mm.','.m....m.','........'],target:.88},
+{name:'Barbed Wire',colors:[0,1,2,4,5],goals:[{t:'wire'},{t:'collect',k:2,n:20}],layout:['........','........','.w....w.','.w....w.','........','...ww...','...ww...','........','........'],target:.86},
+{name:'Hourglass Paddock',colors:[0,1,3,4,5],goals:[{t:'collect',k:4,n:28},{t:'collect',k:0,n:28}],layout:['........','........','#......#','##....##','###..###','##....##','#......#','........','........'],target:.84},
+{name:'Bog Hole',colors:[0,1,2,3,4],goals:[{t:'mud'}],layout:['........','........','m......m','m.MMMM.m','m.MMMM.m','m.MMMM.m','m......m','........','........'],target:.8},
+{name:'Packing Shed',colors:[0,1,2,3,5],goals:[{t:'crate'},{t:'collect',k:1,n:25}],layout:['CC....CC','CC....CC','........','........','........','........','........','cc....cc','cc....cc'],target:.8},
+{name:'Down the Gully',colors:[1,2,3,4,5],goals:[{t:'calf'},{t:'mud'}],calf:{total:3,max:2,p:.05},layout:['.a....a.','........','........','........','........','........','........','........','mmmmmmmm'],target:.78},
+{name:'Fence Line',colors:[0,1,2,3,4],goals:[{t:'wire'},{t:'crate'}],layout:['........','w......w','.w....w.','..w..w..','........','..c..c..','.cc..cc.','........','........'],target:.76},
+{name:'Diamond Dam',colors:[0,2,3,4,5],goals:[{t:'mud'}],layout:['###..###','##.mm.##','#.mmmm.#','.mmmmmm.','mmmmmmmm','.mmmmmm.','#.mmmm.#','##.mm.##','###..###'],target:.75},
+{name:'Flood Plain',colors:[0,1,2,3,4],goals:[{t:'mud'},{t:'collect',k:3,n:20}],layout:['........','........','........','........','mmmmmmmm','mmmmmmmm','mmmmmmmm','mmmmmmmm','mmmmmmmm'],target:.72},
+{name:'Yard Work',colors:[0,1,3,4,5],goals:[{t:'calf'}],calf:{total:4,max:2,p:.06},layout:['a......a','........','........','.c....c.','........','...cc...','........','........','........'],target:.72},
+{name:'Fruit Run',colors:[0,1,2,3,5],goals:[{t:'collect',k:0,n:30},{t:'collect',k:1,n:30},{t:'collect',k:5,n:30}],layout:F8(9),target:.7},
+{name:'Muddy Wires',colors:[0,1,2,4,5],goals:[{t:'wire'},{t:'mud'}],layout:['........','........','.W.WW.W.','........','.m.mm.m.','........','.W.WW.W.','........','........'],target:.7},
+{name:'Stacked Crates',colors:[1,2,3,4,5],goals:[{t:'crate'},{t:'mud'}],layout:['........','........','..CCCC..','..CxxC..','..CxxC..','..CCCC..','........','........','........'],target:.66},
+{name:'Big Wet',colors:[0,1,2,3,4],goals:[{t:'mud'}],layout:['mmmmmmmm','mmmmmmmm','mmMMMMmm','mmMMMMmm','mmMMMMmm','mmMMMMmm','mmMMMMmm','mmmmmmmm','mmmmmmmm'],target:.62},
+{name:'Muster Time',colors:[0,2,3,4,5],goals:[{t:'calf'},{t:'wire'}],calf:{total:5,max:2,p:.07},layout:['..a..a..','........','w......w','........','..w..w..','........','w......w','........','........'],target:.66},
+{name:'Bore Pipes',colors:[0,1,2,3,5],goals:[{t:'collect',k:2,n:30},{t:'collect',k:3,n:30}],layout:['........','.#.##.#.','.#.##.#.','........','........','.#.##.#.','.#.##.#.','........','........'],target:.64},
+{name:'Crate Maze',colors:[0,1,3,4,5],goals:[{t:'crate'}],layout:['........','.cc..cc.','.c....c.','...CC...','.c.CC.c.','.c....c.','.cc..cc.','........','........'],target:.62},
+{name:'Calves in the Mud',colors:[1,2,3,4,5],goals:[{t:'calf'},{t:'mud'}],calf:{total:4,max:2,p:.06},layout:['a......a','........','........','........','........','.mmmmmm.','.mmmmmm.','mmmmmmmm','mmmmmmmm'],target:.6},
+{name:'Six Fruit Salad',colors:[0,1,2,3,4,5],goals:[{t:'collect',k:0,n:22},{t:'collect',k:4,n:22}],layout:F8(9),target:.6},
+{name:'The Old Shed',colors:[0,1,2,4,5],goals:[{t:'crate'},{t:'wire'},{t:'mud'}],layout:['........','.C....C.','.W....W.','..mmmm..','..mmmm..','.W....W.','.C....C.','........','........'],target:.58},
+{name:'Split Paddock',colors:[0,1,2,3,5],goals:[{t:'mud'},{t:'collect',k:1,n:25}],layout:['...##...','...##...','mm.##.mm','mm.##.mm','mm....mm','mm....mm','mm.##.mm','...##...','...##...'],target:.56},
+{name:'Big Muster',colors:[0,1,3,4,5],goals:[{t:'calf'},{t:'mud'}],calf:{total:6,max:3,p:.07},layout:['.a.aa.a.','........','........','........','........','........','........','mmmmmmmm','MMMMMMMM'],target:.55},
+{name:'Freight Day',colors:[0,1,2,3,4],goals:[{t:'crate'}],layout:['........','CC....CC','CC....CC','........','..CCCC..','..CCCC..','........','cc....cc','cc....cc'],target:.52},
+{name:'Cyclone Season',colors:[0,1,2,3,5],goals:[{t:'mud'},{t:'crate'},{t:'calf'}],calf:{total:3,max:2,p:.05},layout:['..a..a..','........','..c..c..','.MMMMMM.','.MMMMMM.','.MMMMMM.','..c..c..','mmmmmmmm','mmmmmmmm'],target:.5},
+];
